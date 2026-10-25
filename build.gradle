@@ -1,0 +1,59 @@
+plugins {
+    id 'java-library'
+    id 'com.gtnewhorizons.retrofuturagradle' version '2.0.2'
+}
+
+group = 'me.cortex.voxy'
+version = '0.1.6-1.7.10-local.4'
+if (providers.gradleProperty('voxyBuildDir').isPresent()) {
+    layout.buildDirectory = file(providers.gradleProperty('voxyBuildDir').get())
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+minecraft {
+    mcVersion = '1.7.10'
+    username = 'VoxyTester'
+}
+repositories { mavenCentral() }
+dependencies {
+    compileOnly files('test-instance/.minecraft/mods/angelica-2.1.61.jar')
+    implementation 'it.unimi.dsi:fastutil:8.5.15'
+    implementation 'org.joml:joml:1.10.8'
+    compileOnly 'org.lwjgl:lwjgl:3.4.2'
+    compileOnly 'org.lwjgl:lwjgl-opengl:3.4.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testImplementation 'org.lwjgl:lwjgl:3.4.2'
+    testImplementation 'org.lwjgl:lwjgl-opengl:3.4.2'
+    testImplementation 'org.lwjgl:lwjgl-glfw:3.4.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'org.lwjgl:lwjgl:3.4.2'
+    testRuntimeOnly 'org.lwjgl:lwjgl:3.4.2:natives-windows'
+    testRuntimeOnly 'org.lwjgl:lwjgl-glfw:3.4.2:natives-windows'
+    testRuntimeOnly 'org.lwjgl:lwjgl-opengl:3.4.2:natives-windows'
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+compileJava { options.release = 21 }
+compileTestJava { options.release = 21 }
+test { useJUnitPlatform { excludeTags 'gpu' } }
+tasks.register('gpuTest', Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+    useJUnitPlatform { includeTags 'gpu' }
+    testLogging { events 'passed', 'failed'; showStandardStreams = true }
+}
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('mcmod.info') { expand version: project.version }
+}
+jar {
+    manifest.attributes('Implementation-Title': 'Voxy Forge 1.7.10 local backport',
+        'FMLCorePlugin': 'me.cortex.voxy.legacy.core.VoxyCore',
+        'FMLCorePluginContainsFMLMod': 'true',
+        'Lwjgl3ify-Aware': 'true',
+        'Implementation-Version': project.version)
+}

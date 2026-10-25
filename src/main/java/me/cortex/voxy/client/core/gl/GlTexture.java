@@ -1,0 +1,47 @@
+package me.cortex.voxy.client.core.gl;
+
+import me.cortex.voxy.legacy.NativeGL;
+import static me.cortex.voxy.legacy.NativeGL.*;
+
+import me.cortex.voxy.common.util.TrackedObject;
+
+
+public class GlTexture extends TrackedObject {
+    public final int id;
+    private final int type;
+    public GlTexture() {
+        this(GL_TEXTURE_2D);
+    }
+
+    public GlTexture(int type) {
+        this.id = glCreateTextures(type);
+        this.type = type;
+    }
+
+    public GlTexture store(int format, int levels, int width, int height) {
+        if (this.type == GL_TEXTURE_2D) {
+            glTextureStorage2D(this.id, levels, format, width, height);
+        } else {
+            throw new IllegalStateException("Unknown texture type");
+        }
+        return this;
+    }
+
+    @Override
+    public void free() {
+        super.free0();
+        glDeleteTextures(this.id);
+    }
+
+    //TODO: FIXME, glGetTextureParameteri doesnt work
+    public static int getRawTextureType(int texture) {
+        if (!glIsTexture(texture)) {
+            throw new IllegalStateException("Not texture");
+        }
+        int immFormat = glGetTextureParameteri(texture, GL_TEXTURE_IMMUTABLE_FORMAT);
+        if (immFormat == 0) {
+            throw new IllegalStateException("Texture: " + texture + " is not immutable");
+        }
+        return immFormat;
+    }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "modid": "voxy",
+    "name": "Voxy (local Forge 1.7.10 backport)",
+    "description": "Experimental local backport. See README for tested scope and limitations.",
+    "version": "${version}",
+    "mcversion": "1.7.10",
+    "url": "https://github.com/MCRcortex/voxy",
+    "authorList": ["MCRcortex (upstream)"],
+    "credits": "Local Forge adaptation; not an official upstream release."
+  }
+]
