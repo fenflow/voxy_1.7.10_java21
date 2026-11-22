@@ -1,3 +1,5 @@
+This is no longer supported, I shifted my focus to developing backport of [Roxy](https://github.com/fenflow/Roxy-1.7.10-Java21) to 1.7.10 since I can actually distribute the jar for that, and it works better.
+
 This is a backport of voxy to forge 1.7.10. I'll be real it's fully done with AI, so take that into consideration. It was tested and created for GregTech: New horizons 2.9.0 beta-3 with Angelica 2.1.61, lwjgl3ify 3.0.31, GTNHLib 0.11.46. Java 21 or newer. Releases are not provided, as voxy is an ARR mod and doesn't allow redistribution.
 
 ## Build and test
